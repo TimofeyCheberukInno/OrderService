@@ -2,8 +2,11 @@ package com.app.impl.entity;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Index;
 import jakarta.persistence.Id;
@@ -50,6 +53,9 @@ public class Order {
 
     @Column(name = "creation_date", nullable = false)
     private LocalDateTime creation_date;
+
+    @OneToMany(mappedBy = "order", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<OrderItem> order_items;
 
     @Override
     public boolean equals(Object o) {
