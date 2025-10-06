@@ -1,0 +1,36 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="create_items_table" author="Tsimafei Chabiaruk">
+        <createTable tableName="items">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="decimal(10,3)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint
+                tableName="items"
+                columnNames="name, price"
+                constraintName="uk_items_name_price" />
+
+        <createIndex tableName="items" indexName="idx_items_name">
+            <column name="name"/>
+        </createIndex>
+
+        <rollback>
+            <dropIndex tableName="items" indexName="idx_items_name"/>
+            <dropUniqueConstraint tableName="items" constraintName="uk_items_name_price"/>
+            <dropTable tableName="items"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

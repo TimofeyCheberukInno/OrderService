@@ -1,0 +1,33 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="create_table_orders" author="Tsimafei Chabiaruk">
+        <createTable tableName="orders">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creation_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="orders" indexName="idx_orders_user_id">
+            <column name="user_id"/>
+        </createIndex>
+
+        <rollback>
+            <dropIndex tableName="orders" indexName="idx_orders_user_id"/>
+            <dropTable tableName="orders"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

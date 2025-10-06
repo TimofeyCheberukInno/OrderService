@@ -1,0 +1,16 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="add_order_id_foreign_key_to_order_items_table" author="Tsimafei Chabiaruk">
+        <addForeignKeyConstraint
+                baseTableName="order_items"
+                baseColumnNames="order_id"
+                constraintName="fk_order_items_order"
+                referencedTableName="orders"
+                referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>
