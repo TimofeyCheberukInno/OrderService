@@ -1,7 +1,6 @@
 package com.app.impl.entity;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -17,10 +16,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.Getter;
 
 import com.app.impl.domain.OrderStatus;
 
@@ -34,14 +32,14 @@ import com.app.impl.domain.OrderStatus;
                 )
         }
 )
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-@ToString
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @Column(name = "user_id", nullable = false)
@@ -56,22 +54,4 @@ public class Order {
 
     @OneToMany(mappedBy = "order", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<OrderItem> order_items;
-
-    @Override
-    public boolean equals(Object o) {
-        if(this == o) return true;
-        if(o == null || getClass() != o.getClass())
-            return false;
-        Order order = (Order) o;
-
-        if(this.id == null || order.id == null)
-            return false;
-
-        return Objects.equals(this.id, order.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return this.id == null ? 123: this.id.hashCode();
-    }
 }
