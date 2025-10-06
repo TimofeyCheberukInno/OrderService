@@ -2,10 +2,11 @@ package com.app.impl.dto.order;
 
 import java.util.List;
 
-import com.app.impl.dto.orderItem.OrderItemDto;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+
+import com.app.impl.dto.orderItem.OrderItemRequestDto;
 
 public record OrderRequestDto(
         @NotNull
@@ -13,5 +14,5 @@ public record OrderRequestDto(
         Long userId,
 
         @NotEmpty
-        List<OrderItemDto> orderItems
+        List<OrderItemRequestDto> orderItems
 ) { }
