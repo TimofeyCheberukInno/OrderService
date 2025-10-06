@@ -15,8 +15,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import com.app.impl.entity.Item;
-
 @Entity
 @Table(name = "order_items")
 @NoArgsConstructor
