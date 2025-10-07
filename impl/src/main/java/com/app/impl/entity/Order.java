@@ -59,6 +59,7 @@ public class Order {
     @CreatedDate
     private LocalDateTime creationDate;
 
+    // With cascading automatically saves OrderItems in DB
     @OneToMany(mappedBy = "order", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
 }

@@ -6,8 +6,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import com.app.impl.dto.orderItem.OrderItemRequestDto;
 
 public record OrderRequestDto(
         @NotBlank
@@ -16,14 +15,4 @@ public record OrderRequestDto(
 
         @NotEmpty
         List<OrderItemRequestDto> orderItems
-) {
-    public record OrderItemRequestDto(
-            @NotNull
-            @Positive
-            Long itemId,
-
-            @NotNull
-            @Positive
-            int quantity
-    ) { }
-}
+) { }
