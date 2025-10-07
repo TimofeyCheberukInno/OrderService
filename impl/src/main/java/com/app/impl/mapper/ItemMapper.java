@@ -1,5 +1,7 @@
 package com.app.impl.mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 
@@ -11,5 +13,7 @@ import com.app.impl.entity.Item;
 public interface ItemMapper {
     Item toEntity(ItemRequestDto itemRequestDto);
 
-    ItemResponseDto toDto(Item item);
+    ItemResponseDto toResponse(Item item);
+
+    List<ItemResponseDto> toResponseList(List<Item> items);
 }

@@ -1,5 +1,7 @@
 package com.app.impl.mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
@@ -16,9 +18,11 @@ import com.app.impl.entity.Order;
 public interface OrderMapper {
     default Order toEntity(OrderRequestDto dto) {
         Order order = new Order();
-        order.setUserId(dto.userId());
+        order.setUserEmail(dto.userEmail());
         return order;
     }
 
     OrderResponseDto toResponse(Order order);
+
+    List<OrderResponseDto> toResponseList(List<Order> orders);
 }

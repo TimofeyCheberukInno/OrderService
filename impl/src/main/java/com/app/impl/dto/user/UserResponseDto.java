@@ -2,7 +2,7 @@ package com.app.impl.dto.user;
 
 import java.time.LocalDate;
 
-public record UserResponse(
+public record UserResponseDto(
         Long id,
         String name,
         String surname,
