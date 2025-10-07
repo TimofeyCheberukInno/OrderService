@@ -5,9 +5,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.app.impl.dto.orderItem.OrderItemRequestDto;
-import com.app.impl.entity.Order;
-import com.app.impl.entity.OrderItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,8 +19,8 @@ import com.app.impl.repository.ItemRepository;
 
 @Service
 public class ItemService {
-    ItemRepository itemRepository;
-    ItemMapper itemMapper;
+    private final ItemRepository itemRepository;
+    private final ItemMapper itemMapper;
 
     @Autowired
     public ItemService(

@@ -17,31 +17,32 @@ import com.app.impl.entity.Item;
 import com.app.impl.entity.Order;
 import com.app.impl.entity.OrderItem;
 import com.app.impl.exception.NoSuchOrderException;
-import com.app.impl.mapper.OrderItemMapper;
 import com.app.impl.dto.order.OrderRequestDto;
 import com.app.impl.dto.order.OrderResponseDto;
 import com.app.impl.dto.orderItem.OrderItemRequestDto;
 import com.app.impl.mapper.OrderMapper;
 import com.app.impl.repository.OrderRepository;
 
+// FIXME: add endpoint for batch user uploading by emails
+//  and change it in methods in this class
 @Service
 public class OrderService {
-    OrderRepository orderRepository;
-    OrderMapper orderMapper;
-    ItemService itemService;
-    OrderItemMapper orderItemMapper;
+    private final OrderRepository orderRepository;
+    private final OrderMapper orderMapper;
+    private final ItemService itemService;
+    private final UserService userService;
 
     @Autowired
     public OrderService(
             OrderRepository orderRepository,
             OrderMapper orderMapper,
             ItemService itemService,
-            OrderItemMapper orderItemMapper
+            UserService userService
     ) {
         this.orderRepository = orderRepository;
         this.orderMapper = orderMapper;
         this.itemService = itemService;
-        this.orderItemMapper = orderItemMapper;
+        this.userService = userService;
     }
 
     @Transactional
@@ -51,7 +52,9 @@ public class OrderService {
         Order order = orderMapper.toEntity(orderRequestDto);
         Order orderWithItems = addOrderItemsToOrder(order, orderRequestDto.orderItems());
         Order savedOrder = orderRepository.save(orderWithItems);
-        return orderMapper.toResponse(savedOrder);
+        OrderResponseDto response = orderMapper.toResponse(savedOrder);
+        response.setUserDto(userService.getUserByEmail(orderRequestDto.userEmail()));
+        return response;
     }
 
     @Transactional
@@ -60,14 +63,18 @@ public class OrderService {
                 .orElseThrow(() -> new NoSuchOrderException(Collections.singleton(orderUpdateRequestDto.id())));
 
         Order updatedOrder = updateOrderFields(orderToUpdate, orderUpdateRequestDto);
-        return orderMapper.toResponse(orderRepository.save(updatedOrder));
+        OrderResponseDto response = orderMapper.toResponse(orderRepository.save(updatedOrder));
+        response.setUserDto(userService.getUserByEmail(updatedOrder.getUserEmail()));
+        return response;
     }
 
     @Transactional(readOnly = true)
     public OrderResponseDto findById(Long id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new NoSuchOrderException(Collections.singleton(id)));
-        return orderMapper.toResponse(order);
+        OrderResponseDto response =  orderMapper.toResponse(order);
+        response.setUserDto(userService.getUserByEmail(order.getUserEmail()));
+        return response;
     }
 
     @Transactional(readOnly = true)
@@ -86,19 +93,19 @@ public class OrderService {
             throw new NoSuchOrderException(notFoundIds);
         }
 
-        return orderMapper.toResponseList(orders);
+        return toResponseList(orders);
     }
 
     @Transactional(readOnly = true)
     public List<OrderResponseDto> findAllByStatus(OrderStatus orderStatus) {
         List<Order> orders = orderRepository.findAllByStatus(orderStatus);
-        return orderMapper.toResponseList(orders);
+        return toResponseList(orders);
     }
 
     @Transactional(readOnly = true)
     public List<OrderResponseDto> findAll() {
         List<Order> orders = orderRepository.findAll();
-        return orderMapper.toResponseList(orders);
+        return toResponseList(orders);
     }
 
     @Transactional
@@ -139,5 +146,15 @@ public class OrderService {
     private Order updateOrderFields(Order orderToUpdate, OrderUpdateRequestDto orderUpdateRequestDto) {
         orderToUpdate.setStatus(orderUpdateRequestDto.status());
         return orderToUpdate;
+    }
+
+    private List<OrderResponseDto> toResponseList(List<Order> orders) {
+        return orders.stream()
+                .map(order -> {
+                    OrderResponseDto responseDto = orderMapper.toResponse(order);
+                    responseDto.setUserDto(userService.getUserByEmail(order.getUserEmail()));
+                    return responseDto;
+                })
+                .toList();
     }
 }

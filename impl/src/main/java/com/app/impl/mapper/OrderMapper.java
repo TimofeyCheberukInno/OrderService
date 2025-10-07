@@ -1,7 +1,9 @@
 package com.app.impl.mapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.app.impl.dto.user.UserResponseDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
@@ -24,6 +26,4 @@ public interface OrderMapper {
     }
 
     OrderResponseDto toResponse(Order order);
-
-    List<OrderResponseDto> toResponseList(List<Order> orders);
 }
