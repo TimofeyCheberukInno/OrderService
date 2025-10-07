@@ -1,6 +1,6 @@
 package com.app.impl.mapper;
 
-import com.app.impl.dto.orderItem.OrderItemResponseDto;
+import com.app.impl.dto.order.OrderResponseDto.OrderItemResponseDto;
 import com.app.impl.entity.OrderItem;
 
 import org.mapstruct.Mapper;

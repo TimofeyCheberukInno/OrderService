@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.app.impl.dto.orderItem.OrderItemRequestDto;
+import com.app.impl.entity.Order;
+import com.app.impl.entity.OrderItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,6 +60,22 @@ public class ItemService {
 
     @Transactional(readOnly = true)
     public List<ItemResponseDto> getAllByIds(List<Long> ids) {
+        List<Item> items = getListOfItemEntitiesById(ids);
+        return itemMapper.toResponseList(items);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ItemResponseDto> getAll() {
+        List<Item> items = itemRepository.findAll();
+        return itemMapper.toResponseList(items);
+    }
+
+    @Transactional
+    public void deleteById(Long id) {
+        itemRepository.deleteById(id);
+    }
+
+    public List<Item> getListOfItemEntitiesById(List<Long> ids) {
         List<Item> items = itemRepository.findAllById(ids);
 
         if(ids.size() != items.size()) {
@@ -71,18 +90,7 @@ public class ItemService {
             throw new NoSuchItemException(notFoundIds);
         }
 
-        return itemMapper.toResponseList(items);
-    }
-
-    @Transactional(readOnly = true)
-    public List<ItemResponseDto> getAll() {
-        List<Item> items = itemRepository.findAll();
-        return itemMapper.toResponseList(items);
-    }
-
-    @Transactional
-    public void deleteById(Long id) {
-        itemRepository.deleteById(id);
+        return items;
     }
 
     private Item updateItemFields(Item itemToUpdate, ItemUpdateRequestDto itemUpdateRequestDto) {
