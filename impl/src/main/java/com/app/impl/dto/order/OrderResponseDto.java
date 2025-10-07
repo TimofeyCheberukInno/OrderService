@@ -8,7 +8,7 @@ import com.app.impl.dto.orderItem.OrderItemResponseDto;
 
 public record OrderResponseDto(
         Long id,
-        Long userId,
+        String userEmail,
         OrderStatus status,
         LocalDateTime creationDate,
         List<OrderItemResponseDto> orderItems

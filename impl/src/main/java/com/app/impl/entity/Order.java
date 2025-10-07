@@ -32,8 +32,8 @@ import com.app.impl.domain.OrderStatus;
         name = "orders",
         indexes = {
                 @Index(
-                        name = "idx_orders_user_id",
-                        columnList = "user_id"
+                        name = "idx_orders_user_email",
+                        columnList = "user_email"
                 )
         }
 )
@@ -48,8 +48,8 @@ public class Order {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @Column(name = "user_email", nullable = false)
+    private String userEmail;
 
     @Column(name = "status", nullable = false, length = 50)
     @Enumerated(EnumType.STRING)

@@ -9,7 +9,7 @@
             <column name="id" type="bigserial">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="user_id" type="bigint">
+            <column name="user_email" type="varchar(100)">
                 <constraints nullable="false"/>
             </column>
             <column name="status" type="varchar(50)">
@@ -20,12 +20,12 @@
             </column>
         </createTable>
 
-        <createIndex tableName="orders" indexName="idx_orders_user_id">
-            <column name="user_id"/>
+        <createIndex tableName="orders" indexName="idx_orders_user_email">
+            <column name="user_email"/>
         </createIndex>
 
         <rollback>
-            <dropIndex tableName="orders" indexName="idx_orders_user_id"/>
+            <dropIndex tableName="orders" indexName="idx_orders_user_email"/>
             <dropTable tableName="orders"/>
         </rollback>
     </changeSet>
