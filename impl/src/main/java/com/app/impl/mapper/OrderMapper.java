@@ -13,7 +13,8 @@ import com.app.impl.entity.Order;
 @Mapper(
         componentModel = MappingConstants.ComponentModel.SPRING,
         uses = {OrderItemMapper.class},
-        unmappedTargetPolicy = ReportingPolicy.IGNORE
+        unmappedTargetPolicy = ReportingPolicy.IGNORE,
+        unmappedSourcePolicy = ReportingPolicy.IGNORE
 )
 public interface OrderMapper {
     default Order toEntity(OrderRequestDto dto) {
