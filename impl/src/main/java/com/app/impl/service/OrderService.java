@@ -69,7 +69,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public OrderResponseDto findById(Long id) {
+    public OrderResponseDto getById(Long id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new NoSuchOrderException(Collections.singleton(id)));
         OrderResponseDto response =  orderMapper.toResponse(order);
@@ -78,7 +78,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrderResponseDto> findAllByIds(List<Long> ids) {
+    public List<OrderResponseDto> getAllByIds(List<Long> ids) {
         List<Order> orders = orderRepository.findAllById(ids);
 
         if(orders.size() != ids.size()){
@@ -97,13 +97,13 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrderResponseDto> findAllByStatus(OrderStatus orderStatus) {
+    public List<OrderResponseDto> getAllByStatus(OrderStatus orderStatus) {
         List<Order> orders = orderRepository.findAllByStatus(orderStatus);
         return toResponseList(orders);
     }
 
     @Transactional(readOnly = true)
-    public List<OrderResponseDto> findAll() {
+    public List<OrderResponseDto> getAll() {
         List<Order> orders = orderRepository.findAll();
         return toResponseList(orders);
     }
