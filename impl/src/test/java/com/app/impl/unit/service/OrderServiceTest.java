@@ -64,26 +64,34 @@ class OrderServiceTest {
         private List<OrderItemRequestDto> orderItems = List.of(orderItemRequestDto1, orderItemRequestDto2);
         private OrderRequestDto orderRequestDto = new OrderRequestDto("test@example.com", orderItems);
 
-        private Order preSavedOrder = new Order();
-        private Order postSavedOrder = new Order();
+        private Order preSavedOrder = new Order(
+                null,
+                "test@example.com",
+                OrderStatus.IN_PROCESS,
+                LocalDateTime.now(),
+                new ArrayList<>()
+        );
+        private Order postSavedOrder = new Order(
+                1L,
+                "test@example.com",
+                OrderStatus.IN_PROCESS,
+                LocalDateTime.now(),
+                new ArrayList<>()
+        );
         private Item item1 = new Item(1L, "item1", BigDecimal.valueOf(100.0));
         private Item item2 = new Item(2L, "item2", BigDecimal.valueOf(200.0));
         private UserResponseDto userResponseDto = new UserResponseDto(1L, "John", "Doe", LocalDate.of(1990, 1, 1), "test@example.com");
-        private OrderResponseDto orderResponseDto = new OrderResponseDto();
+        private OrderResponseDto orderResponseDto = new OrderResponseDto(
+                1L,
+                OrderStatus.IN_PROCESS,
+                LocalDateTime.now(),
+                new ArrayList<>(),
+                userResponseDto
+        );
 
         @Test
         @DisplayName("returns OrderResponseDto if order was successfully created")
         void shouldSaveAndReturnOrder() {
-            // Arrange
-            preSavedOrder.setUserEmail("test@example.com");
-            postSavedOrder.setId(1L);
-            postSavedOrder.setUserEmail("test@example.com");
-            postSavedOrder.setStatus(OrderStatus.IN_PROCESS);
-            postSavedOrder.setCreationDate(LocalDateTime.now());
-
-            orderResponseDto.setId(1L);
-            orderResponseDto.setStatus(OrderStatus.IN_PROCESS);
-            orderResponseDto.setUserDto(userResponseDto);
 
             Mockito.when(orderMapper.toEntity(orderRequestDto))
                     .thenReturn(preSavedOrder);
@@ -98,10 +106,10 @@ class OrderServiceTest {
             Mockito.when(userService.getUserByEmail("test@example.com"))
                     .thenReturn(userResponseDto);
 
-            // Act
+            
             OrderResponseDto actualValue = orderService.create(orderRequestDto);
 
-            // Assert
+            
             assertThat(actualValue).isEqualTo(orderResponseDto);
 
             Mockito.verify(orderMapper, Mockito.times(1))
@@ -128,26 +136,32 @@ class OrderServiceTest {
                 1L,
                 OrderStatus.COMPLETED
         );
-        private Order savedOrder = new Order();
-        private Order updatedOrder = new Order();
+        private Order savedOrder = new Order(
+                1L,
+                "test@example.com",
+                OrderStatus.IN_PROCESS,
+                LocalDateTime.now(),
+                new ArrayList<>()
+        );
+        private Order updatedOrder = new Order(
+                1L,
+                "test@example.com",
+                OrderStatus.COMPLETED,
+                LocalDateTime.now(),
+                new ArrayList<>()
+        );
         private UserResponseDto userResponseDto = new UserResponseDto(1L, "John", "Doe", LocalDate.of(1990, 1, 1), "test@example.com");
-        private OrderResponseDto orderResponseDto = new OrderResponseDto();
+        private OrderResponseDto orderResponseDto = new OrderResponseDto(
+                1L,
+                OrderStatus.COMPLETED,
+                LocalDateTime.now(),
+                new ArrayList<>(),
+                userResponseDto
+        );
 
         @Test
         @DisplayName("updates order")
         void shouldUpdateOrder() {
-            // Arrange
-            savedOrder.setId(1L);
-            savedOrder.setUserEmail("test@example.com");
-            savedOrder.setStatus(OrderStatus.IN_PROCESS);
-
-            updatedOrder.setId(1L);
-            updatedOrder.setUserEmail("test@example.com");
-            updatedOrder.setStatus(OrderStatus.COMPLETED);
-
-            orderResponseDto.setId(1L);
-            orderResponseDto.setStatus(OrderStatus.COMPLETED);
-            orderResponseDto.setUserDto(userResponseDto);
 
             Mockito.when(orderRepository.findById(1L))
                     .thenReturn(Optional.of(savedOrder));
@@ -158,10 +172,10 @@ class OrderServiceTest {
             Mockito.when(userService.getUserByEmail("test@example.com"))
                     .thenReturn(userResponseDto);
 
-            // Act
+            
             OrderResponseDto actualValue = orderService.update(orderUpdateRequestDto);
 
-            // Assert
+            
             assertThat(actualValue).isEqualTo(orderResponseDto);
 
             Mockito.verify(orderRepository, Mockito.times(1))
@@ -212,21 +226,25 @@ class OrderServiceTest {
     @Nested
     @DisplayName("Tests for getById(Long id)")
     class getOrderByIdTests {
-        private Order order = new Order();
+        private Order order = new Order(
+                1L,
+                "test@example.com",
+                OrderStatus.IN_PROCESS,
+                LocalDateTime.now(),
+                new ArrayList<>()
+        );
         private UserResponseDto userResponseDto = new UserResponseDto(1L, "John", "Doe", LocalDate.of(1990, 1, 1), "test@example.com");
-        private OrderResponseDto orderResponseDto = new OrderResponseDto();
+        private OrderResponseDto orderResponseDto = new OrderResponseDto(
+                1L,
+                OrderStatus.IN_PROCESS,
+                LocalDateTime.now(),
+                new ArrayList<>(),
+                userResponseDto
+        );
 
         @Test
         @DisplayName("returns order by id")
         void shouldReturnOrderById() {
-            // Arrange
-            order.setId(1L);
-            order.setUserEmail("test@example.com");
-            order.setStatus(OrderStatus.IN_PROCESS);
-
-            orderResponseDto.setId(1L);
-            orderResponseDto.setStatus(OrderStatus.IN_PROCESS);
-            orderResponseDto.setUserDto(userResponseDto);
 
             Mockito.when(orderRepository.findById(1L))
                     .thenReturn(Optional.of(order));
@@ -235,10 +253,10 @@ class OrderServiceTest {
             Mockito.when(userService.getUserByEmail("test@example.com"))
                     .thenReturn(userResponseDto);
 
-            // Act
+            
             OrderResponseDto actualValue = orderService.getById(1L);
 
-            // Assert
+            
             assertThat(actualValue).isEqualTo(orderResponseDto);
 
             Mockito.verify(orderRepository, Mockito.times(1))
@@ -274,8 +292,8 @@ class OrderServiceTest {
     class getAllByIdsTests {
         private List<Order> orders = new ArrayList<>(
                 List.of(
-                        createTestOrder(1L, "test1@example.com", OrderStatus.IN_PROCESS),
-                        createTestOrder(2L, "test2@example.com", OrderStatus.COMPLETED)
+                        new Order(1L, "test1@example.com", OrderStatus.IN_PROCESS, LocalDateTime.now(), new ArrayList<>()),
+                        new Order(2L, "test2@example.com", OrderStatus.COMPLETED, LocalDateTime.now(), new ArrayList<>())
                 )
         );
 
@@ -294,7 +312,6 @@ class OrderServiceTest {
                     .thenReturn(new UserResponseDto(2L, "Jane", "Smith", LocalDate.of(1995, 5, 15), "test2@example.com"));
 
             List<OrderResponseDto> actualValues = orderService.getAllByIds(List.of(1L, 2L));
-
             Assertions.assertThat(actualValues).hasSize(2);
 
             Mockito.verify(orderRepository, Mockito.times(1))
@@ -314,7 +331,9 @@ class OrderServiceTest {
         @Test
         @DisplayName("throws NoSuchOrderException when not all orders found")
         void shouldThrowNoSuchOrderExceptionWhenNotAllFound() {
-            List<Order> partialOrders = List.of(createTestOrder(1L, "test1@example.com", OrderStatus.IN_PROCESS));
+            List<Order> partialOrders = List.of(
+                    new Order(1L, "test1@example.com", OrderStatus.IN_PROCESS, LocalDateTime.now(), new ArrayList<>())
+            );
             
             Mockito.when(orderRepository.findAllById(List.of(1L, 2L)))
                     .thenReturn(partialOrders);
@@ -336,8 +355,8 @@ class OrderServiceTest {
     class getAllByStatusTests {
         private List<Order> orders = new ArrayList<>(
                 List.of(
-                        createTestOrder(1L, "test1@example.com", OrderStatus.IN_PROCESS),
-                        createTestOrder(2L, "test2@example.com", OrderStatus.IN_PROCESS)
+                        new Order(1L, "test1@example.com", OrderStatus.IN_PROCESS, LocalDateTime.now(), new ArrayList<>()),
+                        new Order(2L, "test2@example.com", OrderStatus.IN_PROCESS, LocalDateTime.now(), new ArrayList<>())
                 )
         );
 
@@ -356,7 +375,6 @@ class OrderServiceTest {
                     .thenReturn(new UserResponseDto(2L, "Jane", "Smith", LocalDate.of(1995, 5, 15), "test2@example.com"));
 
             List<OrderResponseDto> actualValues = orderService.getAllByStatus(OrderStatus.IN_PROCESS);
-
             Assertions.assertThat(actualValues).hasSize(2);
 
             Mockito.verify(orderRepository, Mockito.times(1))
@@ -380,7 +398,6 @@ class OrderServiceTest {
                     .thenReturn(List.of());
 
             List<OrderResponseDto> actualValues = orderService.getAllByStatus(OrderStatus.CANCELLED);
-
             Assertions.assertThat(actualValues).isEmpty();
 
             Mockito.verify(orderRepository, Mockito.times(1))
@@ -397,8 +414,8 @@ class OrderServiceTest {
     class findAllTests {
         private List<Order> orders = new ArrayList<>(
                 List.of(
-                        createTestOrder(1L, "test1@example.com", OrderStatus.IN_PROCESS),
-                        createTestOrder(2L, "test2@example.com", OrderStatus.COMPLETED)
+                        new Order(1L, "test1@example.com", OrderStatus.IN_PROCESS, LocalDateTime.now(), new ArrayList<>()),
+                        new Order(2L, "test2@example.com", OrderStatus.COMPLETED, LocalDateTime.now(), new ArrayList<>())
                 )
         );
 
@@ -418,7 +435,6 @@ class OrderServiceTest {
 
 
             List<OrderResponseDto> actualValues = orderService.getAll();
-
             Assertions.assertThat(actualValues).hasSize(2);
 
             Mockito.verify(orderRepository, Mockito.times(1))
@@ -442,7 +458,6 @@ class OrderServiceTest {
                     .thenReturn(List.of());
 
             List<OrderResponseDto> actualValues = orderService.getAll();
-
             Assertions.assertThat(actualValues).isEmpty();
 
             Mockito.verify(orderRepository, Mockito.times(1))
@@ -455,20 +470,13 @@ class OrderServiceTest {
     }
 
     // Helper methods
-    private Order createTestOrder(Long id, String userEmail, OrderStatus status) {
-        Order order = new Order();
-        order.setId(id);
-        order.setUserEmail(userEmail);
-        order.setStatus(status);
-        order.setCreationDate(LocalDateTime.now());
-        return order;
-    }
-
     private OrderResponseDto createTestOrderResponseDto(Long id, OrderStatus status) {
-        OrderResponseDto dto = new OrderResponseDto();
-        dto.setId(id);
-        dto.setStatus(status);
-        dto.setCreationDate(LocalDateTime.now());
-        return dto;
+        return new OrderResponseDto(
+                id,
+                status,
+                LocalDateTime.now(),
+                new ArrayList<>(),
+                null
+        );
     }
 }
