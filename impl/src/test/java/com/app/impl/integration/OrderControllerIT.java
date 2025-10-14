@@ -9,10 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.client.WireMock;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -28,6 +25,10 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 
 import com.app.impl.domain.OrderStatus;
 import com.app.impl.dto.order.OrderRequestDto;
@@ -71,7 +72,7 @@ public class OrderControllerIT {
     @DynamicPropertySource
     static void overrideProps(DynamicPropertyRegistry registry) {
         if (wireMockServer == null) {
-            wireMockServer = new WireMockServer(com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig().dynamicPort());
+            wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().dynamicPort());
             wireMockServer.start();
         }
         registry.add("user.service.url", () -> wireMockServer.baseUrl());
