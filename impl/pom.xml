@@ -33,6 +33,7 @@
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <spring.cloud.starter.openfeign.version>4.3.0</spring.cloud.starter.openfeign.version>
         <jacoco.version>0.8.13</jacoco.version>
+        <sonar.organization>timofeycheberukinno</sonar.organization>
     </properties>
     <dependencies>
         <!-- Spring -->
