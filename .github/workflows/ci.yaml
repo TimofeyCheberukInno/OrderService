@@ -1,12 +1,12 @@
 name: Order Service CI pipeline
 
 on:
-  push:	
+  push: 
     branches: [ main ]
   pull_request:
     branches: [ main ]
     types: [ opened, synchronize, reopened ]
-
+    
 jobs:
   build-and-analyze:
     name: Build and Analyze
