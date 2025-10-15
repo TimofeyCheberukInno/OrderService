@@ -31,7 +31,7 @@ jobs:
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
-          restore-key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
           
       - name: Run Maven with Code Analysis
         env:
