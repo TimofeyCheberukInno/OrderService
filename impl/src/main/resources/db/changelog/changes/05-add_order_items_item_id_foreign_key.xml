@@ -10,7 +10,8 @@
                 baseColumnNames="item_id"
                 constraintName="fk_item_items_order"
                 referencedTableName="items"
-                referencedColumnNames="id"/>
+                referencedColumnNames="id"
+                onDelete="RESTRICT"/>
     </changeSet>
 
 </databaseChangeLog>

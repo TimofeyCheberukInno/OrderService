@@ -1,1 +1,16 @@
-spring.application.name=impl
+spring:
+  application:
+    name: impl
+  profiles:
+    active: dev
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
+    enabled: true
+
+  jpa:
+    hibernate:
+      ddl-auto: validate

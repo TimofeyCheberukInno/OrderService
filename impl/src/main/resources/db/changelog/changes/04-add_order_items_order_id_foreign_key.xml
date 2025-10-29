@@ -10,7 +10,8 @@
                 baseColumnNames="order_id"
                 constraintName="fk_order_items_order"
                 referencedTableName="orders"
-                referencedColumnNames="id"/>
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
     </changeSet>
 
 </databaseChangeLog>
