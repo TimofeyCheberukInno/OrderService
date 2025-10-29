@@ -8,5 +8,5 @@ import com.app.impl.entity.Order;
 import com.app.impl.domain.OrderStatus;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    List<Order> findAllByStatusIn(List<OrderStatus> status);
+    List<Order> findAllByStatus(OrderStatus status);
 }

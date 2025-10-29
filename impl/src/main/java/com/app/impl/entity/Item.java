@@ -12,10 +12,9 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 @Entity
 @Table(
@@ -33,14 +32,14 @@ import lombok.ToString;
                 )
         }
 )
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-@ToString
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @Column(name = "name", nullable = false)
@@ -48,23 +47,4 @@ public class Item {
 
     @Column(name = "price", precision = 10, scale = 3, nullable = false)
     private BigDecimal price;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || o.getClass() != this.getClass())
-            return false;
-        Item item = (Item) o;
-
-        if(this.id == null || item.id == null)
-            return false;
-
-        return this.id.equals(item.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id == null ? 222 : this.id.hashCode();
-    }
 }

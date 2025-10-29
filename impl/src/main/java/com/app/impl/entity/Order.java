@@ -1,11 +1,12 @@
 package com.app.impl.entity;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Index;
@@ -16,11 +17,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.Getter;
 
 import com.app.impl.domain.OrderStatus;
 
@@ -29,49 +32,34 @@ import com.app.impl.domain.OrderStatus;
         name = "orders",
         indexes = {
                 @Index(
-                        name = "idx_orders_user_id",
-                        columnList = "user_id"
+                        name = "idx_orders_user_email",
+                        columnList = "user_email"
                 )
         }
 )
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-@ToString
+@EntityListeners(AuditingEntityListener.class)
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long user_id;
+    @Column(name = "user_email", nullable = false)
+    private String userEmail;
 
     @Column(name = "status", nullable = false, length = 50)
     @Enumerated(EnumType.STRING)
-    private OrderStatus status;
+    private OrderStatus status = OrderStatus.IN_PROCESS;
 
     @Column(name = "creation_date", nullable = false)
-    private LocalDateTime creation_date;
+    @CreatedDate
+    private LocalDateTime creationDate;
 
+    // With cascading automatically saves OrderItems in DB
     @OneToMany(mappedBy = "order", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<OrderItem> order_items;
-
-    @Override
-    public boolean equals(Object o) {
-        if(this == o) return true;
-        if(o == null || getClass() != o.getClass())
-            return false;
-        Order order = (Order) o;
-
-        if(this.id == null || order.id == null)
-            return false;
-
-        return Objects.equals(this.id, order.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return this.id == null ? 123: this.id.hashCode();
-    }
+    private List<OrderItem> orderItems = new ArrayList<>();
 }
